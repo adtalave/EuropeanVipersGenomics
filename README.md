@@ -10,7 +10,7 @@ Here you will find code for:
 3. Population structure analyses
 4. Calculating [genome-wide heterozygosity estimates](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/heterozygosity_estimates.sh) in previously delimited [windows](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/windows.sh). 
 5. Phylogenies and introgression
-6. 
+6. Macrosynteny
 7. Transcriptomic analyses
 8. 
 
