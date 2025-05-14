@@ -3,8 +3,7 @@ Here you can follow the pipeline to get a raw VCF from raw Illumina reads.
 
 ## Filtering reads with Fastp
 
-We use fastp v0.24.0 to filter out bases below PhredScore 30, trim poly-X and -G tails, overrepresented sequences, and adapters, allowing for Pair-End adapter detection.
-Sequencing library names are changed to original sample names on filtered fastq files.
+First, we use fastp to filter raw Illumina reads.
 
 ```bash
 #!/bin/bash
