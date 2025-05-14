@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #change these paths to your own files
-vcf_complete="path/to/your/VCF"
+vcf_complete="path/to/your/VCF/with/autosomes"
 samples="path/to/a/list/of/samples.txt"
 output_dir="path/to/output/directory"
 windows="path/to/windows.txt" #you can find the script to produce this file in the same repository
