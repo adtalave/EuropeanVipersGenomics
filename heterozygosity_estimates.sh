@@ -7,11 +7,9 @@ output_dir="path/to/output/directory"
 windows="path/to/windows.txt" #you can find the script to produce this file in the same repository
 output_summary_file="path/to/output/summary_file"
 
-
 for sample in $(cat $samples);
 do
 (
-
 
 echo "Processing sample $sample"
 
