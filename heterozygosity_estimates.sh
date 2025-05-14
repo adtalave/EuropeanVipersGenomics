@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#change this paths to your own files
+#change these paths to your own files
 vcf_complete="path/to/your/VCF"
 samples="path/to/a/list/of/samples.txt"
 output_dir="path/to/output/directory"
