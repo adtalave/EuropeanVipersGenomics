@@ -12,7 +12,7 @@ Here you will find code for:
 5. [Macrosynteny](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/05.macrosynteny.md)
 6. Population structure [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/06.population_genomics.md).
 7. Transcriptomic analyses
-8. Climatic Niche overlap [R script](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/ecological_comparisons.R)
+8. Climatic niche overlap [R script](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/ecological_comparisons.R)
 
-Annotation files for Vipera latastei, V. aspis, and V. seoanei also available at the repository.
+
 
