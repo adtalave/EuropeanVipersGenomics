@@ -14,5 +14,5 @@ Here you will find code for:
 7. Transcriptomic analyses
 8. Climatic Niche overlap [R script](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/ecological_comparisons.R)
 
-
+Annotation files for Vipera latastei, V. aspis, and V. seoanei also available at the repository.
 
