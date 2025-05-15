@@ -1,0 +1,205 @@
+# From proteomes to genes
+
+We used peptide sequences detected in the proteomes of venom samples to match sequences coded from the genes present in our references.
+A raw tsv from peptides found in the three de novo proteomes done in this work (from V. latastei) is found in the [repository](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/3_Vlat_proteomes.tsv).
+
+This first loop reads lines from a txt file with peptidic sequences. It cleans the peptidic seqcuences and matches them with a fasta file containing all protein isoforms annotated in our reference, retrieving transcript IDs.
+
+```bash
+#!/bin/bash
+proteins_all="rVipLat1.0_tsebra_edited.faa"
+
+awk '!a[$1]++' 3_vlat_proteomes.tsv > 3_vlat_proteomes_uniq.tsv
+proteome="3_vlat_proteomes_uniq.tsv"
+
+#first loop of the script
+echo "Looking for transcripts matching peptide sequences"
+while read line
+do
+	peptide_seq=$(awk '{print $1}' <<< $line)
+	family=$(awk '{print $4}' <<< $line)
+	peptide_clean=$(echo "$peptide_seq" | sed -r -e 's/[a-z]*//g' | sed -e 's/([^()]*)//g' | sed -r -e 's/_//g' | sed -e 's/^[ \t]*//' )
+	if [ -n "peptide_clean" ]; then
+		number_matches=$(grep "$peptide_clean" $proteins_all | wc -l)
+		echo "$number_matches"" transcripts found for sequence: ""$peptide_clean"
+		if [ $number_matches -gt 0 ]
+		then
+			grep -B1 "$peptide_clean" $proteins_all | grep ">" > tmp/"$family"_"$peptide_clean".txt
+		fi
+		if [ $number_matches -eq 0 ]
+		then
+			echo "$peptide_seq" >> not_found_pep.txt
+		fi
+	fi
+done < $proteome
+```
+Check out that not found peptides do not include letters that can mean two different aminoacids at the same time (i.e. X and B):
+```
+grep -c "X" not_found_pep.txt
+grep -c "B" not_found_pep.txt
+```
+Secondly, within the tmp folder, we look at each of the identified transcripts, removes ">" or blank spaces and searched the gene they belong to.
+
+```bash
+#!/bin/bash
+gff="rVipLat1.0_tsebra_edited.gff"
+
+cd tmp
+rm gene*
+rm _.txt
+echo "Transcripts found. Now searching for gene IDs"
+
+filelist=$(ls *.txt)
+
+N=24
+
+for i in ${filelist}; do
+	(
+	while read line
+	do
+		transcriptID_raw=$(awk '{print $0}' <<< $line)
+		transcriptID=$(echo "$transcriptID_raw" | sed 's/>//g' | sed -e 's/^[ \t]*//')
+		if [ -n $transcriptID ]; then
+			geneID=$(grep "ID=$transcriptID;Parent=g" "$gff" | sed 's/^.*Parent=//')
+			echo -e "$geneID\t$transcriptID" >> gene_"$i"
+			echo "Transcript processed"
+		fi
+	done < $i
+	) &
+	
+	#allow to execute up to $N jobs in parallel
+	if [[ $(jobs -r -p | wc -l) -ge $N ]]; then
+	wait -n
+	fi
+
+done 
+wait
+echo "Finished"
+```
+Third, we create a list of unique genes and transcripts that have matched, along with the family they sypposedly belong to.
+
+```bash
+#!/bin/bash
+filelist=$(ls gene*.txt)
+rm gene_hits_xpeptide_wfam.tsv
+rm unique_*
+
+echo "Generating unique gene hits for each peptide"
+for gene_file in ${filelist}
+do
+(
+cat $gene_file | awk '!a[$1]++' >> unique_"$gene_file"
+) &
+
+done 
+wait
+
+filelist2=$(ls unique_*.txt)
+
+echo "Appending unique hits with their respective toxin family in gene_hits_xpeptide_wfam.tsv"
+
+for unique_gene_file in ${filelist2}
+do
+(
+family_ID=$(echo "$unique_gene_file" | awk -F "_" '{print $3}' )
+while read line
+do
+	linewfam=$( awk '{ print $0, v1 }' v1=$family_ID <<< $line )
+	echo "$linewfam" >> gene_hits_xpeptide_wfam.tsv
+done < $unique_gene_file
+
+)
+done
+
+cat gene_hits_xpeptide_wfam.tsv | awk '!a[$1]++' > Vlat_unique_toxins.tsv
+cat Vlat_unique_toxins.tsv | sed -r -e 's/Fragment//g' > Vlat_unique_toxins_ed.tsv 
+
+echo "Number of genes identified from the proteome: "
+cat Vlat_unique_toxins_ed.tsv | wc -l
+```
+
+Later, we count how many hits to each transcript we have found in the proteome file, to know which isoform is most likely found in the venom (the one we kept).
+
+```bash
+cat gene_*.txt > all_gene_transcripts.txt
+awk 'NR == FNR { ++ctr[$2]; next } { print $0 "\t" ctr[$2]; }' all_gene_transcripts.txt all_gene_transcripts.txt > all_gene_transcripts_occurrencies.txt
+cat all_gene_transcripts_occurrencies.txt | awk '!a[$2]++' > all_gene_transcripts_singltr.txt
+cat all_gene_transcripts_singltr.txt | sort -k 3,3 -n -r | awk '!a[$1]++' > vlat_top_iso_gene.txt
+cat vlat_top_iso_gene.txt |  wc -l #Number of genes that have matched
+```
+
+Now, we can localize this venomencoding genes into the chromosomes.
+
+```bash
+#!/bin/bash
+results="vlat_top_iso_gene.txt"
+gtf="rVipLat1.0_tsebra_edited.gtf"
+
+rm vlat_top_iso_gene_complete.tsv
+while read line
+do
+	gene_ID=$(awk '{print $1}' <<< $line)
+	line_gene_gtf=$(grep "$gene_ID$" "$gtf" | head -n 1)
+	chrom=$(awk '{print $1}' <<< $line_gene_gtf)
+	start=$(awk '{print $4}' <<< $line_gene_gtf)
+	stop=$(awk '{print $5}' <<< $line_gene_gtf)
+	orient=$(awk '{print $7}' <<< $line_gene_gtf)
+	line_new=$( awk '{ print $0, v1, v2, v3, v4 }' v1=$chrom v2=$start v3=$stop v4=$orient <<< $line )
+	echo "$line_new" >> vlat_top_iso_gene_complete.tsv
+done < $results
+```
+
+Next, we generate a fasta file with the protein secuences from those specific isoforms
+
+```bash
+#!/bin/bash
+results="vlat_top_iso_gene_complete.tsv"
+fasta_all="rVipLat1.0_tsebra_edited.faa"
+rm vlat_top_iso_gene_complete.faa 
+while read line
+do
+	transcript_ID=$(awk '{print $2}' <<< $line)
+	newline=$(grep "$transcript_ID$" -A 1 "$fasta_all" | head -n 2)
+	echo "$newline" >> vlat_top_iso_gene_complete.faa 
+done < $results
+``
+Finaly, with these sequences, we can manually blast them to double-check whether they are related or not to known toxin sequences.
+
+# Genome-wide blasts 
+
+Additionally, we can blast all annotated genes/isoforms against a [custom database](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/viperinae_toxins_13families.uniq.faa) with typical Viper toxin families, as some venomous genes may not be expressed (or detected in the proteomes or differential gene expression analyses).
+We filter out with a stringent threshold (e value below 10e-8).
+
+```bash
+proteins="protein/sequences/from/reference.faa"
+database="viperinae_toxins_13families.uniq.faa"
+
+blastp -query "$proteins" -db $database -out latastei_toxins_genome_wide.tsv -outfmt 6
+awk '$11<=0.00000001' latastei_toxins_genome_wide.tsv >> latastei_toxins_genome_wide_10-8.tsv
+LC_ALL=C sort -g -k 11 latastei_toxins_genome_wide_10-8.tsv | awk '!seen[$1]++' >> latastei_toxins_genome_wide_10-8_final.tsv
+```
+Now, we have a tsv file with the best matching toxin for each gene that passed the threshold when compared with the custom database of toxins.
+Then, we want to extract the gene ID of those matching genes and the ID of the best-matching isoform.
+
+```
+#!/bin/bash
+gff="rVipLat1.0_tsebra_edited.gff"
+results="latastei_toxins_genome_wide_10-8_final.tsv"
+
+rm putative_toxins.tsv
+echo "Searching for gene IDs of putative toxic transcripts of genome-wide blast"
+
+while read line; do
+	transcriptID=$(awk '{print $1}' <<< $line)
+	FamilyID=$(echo $line | awk '{print $2}' | sed -E 's/^([^_-]*).*$/\1/g' )
+	if [ -n $transcriptID ]; then
+		geneID=$(grep "ID=$transcriptID;Parent=g" "$gff" | sed 's/^.*Parent=//')
+		echo -e "$geneID\t$transcriptID\t$FamilyID" >> putative_toxins.tsv
+		echo "Transcript processed"
+	fi
+done < $results
+```
+
+
+me quedo por aqui, ahora continuar con el script 2 de los genome wide blasts,.
+
