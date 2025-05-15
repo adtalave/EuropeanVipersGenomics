@@ -11,7 +11,7 @@ Here you will find code for:
 4. Phylogenies and introgression
 5. [Macrosynteny](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/05.macrosynteny.md)
 6. Population structure [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/06.population_genomics.md).
-7. Transcriptomic analyses
+7. Venom transcriptomics (differential gene expression [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/07.1.transcriptomics.md), and [toxin assignation](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/07.3.toxin_assignation.md) from genome-wide blasts and proteomes).
 8. Climatic niche overlap [R script](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/ecological_comparisons.R)
 
 
