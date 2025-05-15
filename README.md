@@ -9,7 +9,7 @@ Here you will find code for:
 2. VCF filtering [example](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/VCFfiltering.md)
 3. Calculating [genome-wide heterozygosity estimates](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/heterozygosity_estimates.sh) in previously delimited [windows](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/windows.sh). 
 4. Phylogenies and introgression
-5. Macrosynteny
+5. [Macrosynteny](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/05.macrosynteny.md)
 6. Population structure [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/06.population_genomics.md).
 7. Transcriptomic analyses
 8. Climatic Niche overlap [R script](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/ecological_comparisons.R)
