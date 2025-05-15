@@ -55,7 +55,7 @@ masked="path/to/your/sofmasked/reference.repeats.bed" #you can get this file wit
 
 bedtools intersect -header -v -a 10SNPfiltered_dataset.vcf.gz -b "$masked" | bgzip -c > masked_dataset.vcf.gz
 ```
-Additionally, you can apply others masks such as mappability, explained [here](http://lh3lh3.users.sourceforge.net/snpable.shtml). 
+Additionally, you can apply other masks such as mappability, explained [here](http://lh3lh3.users.sourceforge.net/snpable.shtml). 
 ## Other filters
 Adjust the minimum allele frequency to the number of samples of your VCF, taking into account whether you'd like to keep singletons, for example.
 ```bash
@@ -64,4 +64,11 @@ vcftools --gzvcf masked_dataset.vcf.gz --min-alleles 2 --max-alleles 2 --remove-
 ```
 ## LD-pruning 
 For population genomics analyses you can calculate how Linkage Disequilibrium decays and consequently prune your data to keep only unlinked SNPs.
-
+To calculate LD decay within a "population":
+```bash
+PopLDdecay/bin/PopLDdecay -InVCF  1pop_autosomes.vcf.gz  -MaxDist 40 -OutStat 1pop.stat
+```
+Then you can thin your dataset accordingly:
+```bash
+vcftools --gzvcf filtered_dataset.vcf.gz --thin 500 --recode --stdout | gzip -c > unlinked_dataset.vcf.gz 
+```
