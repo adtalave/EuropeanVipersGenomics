@@ -7,7 +7,7 @@ Here you will find code for:
 2. VCF filtering [example](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/VCFfiltering.md).
 3. Calculating [genome-wide heterozygosity estimates](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/heterozygosity_estimates.sh) in previously delimited [windows](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/windows.sh). 
 4. [Phylogenies and introgression](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/04.phylogenies.md).
-5. Demographic inference with [PSMC](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/05.PSMC).
+5. Demographic inference with [PSMC](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/05.PSMC.md).
 6. Population structure [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/06.population_genomics.md).
 7. Venom transcriptomics (differential gene expression [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/07.1.transcriptomics.md), and [venom genes characterization](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/07.3.toxin_characterization.md) from genome-wide blasts and proteomes).
 8. [Macrosynteny](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/08.macrosynteny.md).
