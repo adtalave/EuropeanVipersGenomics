@@ -1,6 +1,6 @@
 # Unveiling the evolutionary history of European vipers and their venoms from a multi-omic approach
 
-Repository from the manuscript "Unveiling the evolutionary history of European vipers and their venoms from a multi-omic approach".
+Repository from the manuscript "_Unveiling the evolutionary history of European vipers and their venoms from a multi-omic approach_".
 Here you will find code for:
 
 1. The [pipeline](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/01.from_raw_reads2VCF.md) from raw reads to a VCF file.
