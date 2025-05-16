@@ -5,7 +5,7 @@ Here you will find code for:
 
 1. The [pipeline](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/from_raw_reads2VCF.md) from raw reads to a VCF file.
 2. VCF filtering [example](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/VCFfiltering.md).
-3. Calculating [genome-wide heterozygosity estimates](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/heterozygosity_estimates.sh) in previously delimited [windows](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/windows.sh). 
+3. Calculating [genome-wide heterozygosity estimates](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/03.1.heterozygosity_estimates.sh) in previously delimited [windows](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/windows.sh), and [RoHs](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/03.2.RoHs.md).
 4. [Phylogenies and introgression](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/04.phylogenies.md).
 5. Demographic inference with [PSMC](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/05.PSMC.md).
 6. Population structure [analyses](https://github.com/adtalave/EuropeanVipersGenomics/blob/main/06.population_genomics.md).
